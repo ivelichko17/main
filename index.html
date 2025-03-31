@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генерація QR-коду</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>QR-код з логотипом</title>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,6 @@
             margin-top: 50px;
             background-color: #f4f4f4;
         }
-        
         .container {
             background: #fff;
             padding: 20px;
@@ -20,25 +19,16 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             display: inline-block;
         }
-        h2 {
-            margin-bottom: 15px;
-        }
-        
-        input {
+        input, button {
             padding: 10px;
-            width: 80%;
-            max-width: 300px;
+            margin: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
             background: #007bff;
             color: white;
-            border: none;
-            border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -47,37 +37,54 @@
         }
         #qrcode {
             margin-top: 20px;
-            padding: 10px;
-            background: #fff;
-            display: inline-block;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Генератор QR-коду</h2>
+        <h2>QR-код з логотипом</h2>
         <input type="text" id="text" placeholder="Введіть посилання..." value="https://example.com">
         <button onclick="generateQRCode()">Згенерувати</button>
         <div id="qrcode"></div>
+        <button onclick="downloadQRCode()">📥 Завантажити QR-код</button>
     </div>
 
     <script>
+        let qrCode; // Глобальна змінна для QR-коду
+
         function generateQRCode() {
+            let text = document.getElementById("text").value;
             let qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = ""; // Очистка перед новою генерацією
-            let text = document.getElementById("text").value;
-            new QRCode(qrContainer, {
-                text: text,
-                width: 150,
-                height: 150
+
+            qrCode = new QRCodeStyling({
+                width: 300,
+                height: 300,
+                data: text,
+                image: "images/627921b8bc7224002289f423_optimized_302.webp", // Логотип у QR-коді
+                dotsOptions: {
+                    color: "#000",
+                    type: "dots"
+                },
+                backgroundOptions: {
+                    color: "#fff"
+                },
+                imageOptions: {
+                    crossOrigin: "anonymous",
+                    margin: 10, // Відступи навколо логотипу
+                    imageSize: 0.2 // Розмір логотипу (0.2 = 20% від QR-коду)
+                }
             });
+
+            qrCode.append(qrContainer);
         }
 
-        // Генерація QR-коду при завантаженні сторінки
-        generateQRCode();
+        function downloadQRCode() {
+            qrCode.download({ name: "qrcode", extension: "png" });
+        }
+
+        generateQRCode(); // Генеруємо QR-код при завантаженні сторінки
     </script>
 
 </body>
